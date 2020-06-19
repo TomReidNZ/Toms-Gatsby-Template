@@ -1,9 +1,10 @@
-import React from "react"
+import React from "react";
+import { graphql } from "gatsby";
+import Layout from "../layout";
+import SEO from "../components/SEO";
 
-import Layout from "../components/layout"
-import SEO from "../components/seo"
+import "./index.scss";
 
-import "./index.css";
 class Index extends React.Component {
   render() {
     const pageMeta = {
@@ -12,7 +13,14 @@ class Index extends React.Component {
       cover: "https://spaceholder.cc/400x300",
       path: "/",
     };
-
+    // const {
+    //   data: {
+    //     site: {
+    //       siteMetadata: {  },
+    //     },
+    //     allMarkdownRemark: {  },
+    //   },
+    // } = this.props;
     return (
       <Layout>
         <SEO pageMeta={pageMeta} />
@@ -34,7 +42,7 @@ class Index extends React.Component {
               <div className="image-2-wrapper">
                 <img
                   className="section-2-image"
-                  src={"./images/section-2-image.png"}
+                  src={"./images/section-2-image.jpg"}
                   alt="suit with a brain"
                 />
               </div>
@@ -111,13 +119,15 @@ class Index extends React.Component {
         </div>
         <div className="section section-4">
           <div className="lady-image-grid">
-            <div className="lady-image-wrapper">
-              <img
-                className="lady-image"
-                src={"./images/lady.jpg"}
-                alt="lady with tablet"
-              />
-            </div>
+            {/* <div className="lady-section-wrapper"> */}
+              <div className="lady-image-wrapper">
+                <img
+                  className="lady-image"
+                  src={"./images/lady.jpg"}
+                  alt="lady with tablet"
+                />
+              </div>
+            {/* </div> */}
           </div>
           <div className="content-wrapper">
             <div className="content-grid">
@@ -188,10 +198,48 @@ class Index extends React.Component {
             </form>
           </div>
         </div>
+        {/* </Container> */}
       </Layout>
     );
   }
 }
 
+export default Index;
 
-export default Index
+/* eslint no-undef: "off" */
+export const pageQuery = graphql`
+  query IndexQuery {
+    site {
+      siteMetadata {
+        topics {
+          title
+          slug
+          description
+          cover
+        }
+      }
+    }
+    allMarkdownRemark(
+      limit: 3
+      sort: { fields: [fields___date], order: DESC }
+    ) {
+      edges {
+        node {
+          fields {
+            slug
+            date
+          }
+          excerpt(pruneLength: 580)
+          timeToRead
+          frontmatter {
+            title
+            tags
+            topics
+            cover
+            date
+          }
+        }
+      }
+    }
+  }
+`;
